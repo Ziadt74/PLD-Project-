@@ -1,0 +1,126 @@
+"Start Symbol" = <program>
+               
+"Author" = 'Ahmed Ayman Mohamed'
+
+!---------------Character_Set------------
+{Id Head} = {letter}+ [_]
+          
+{Id Tail} = {Alphanumeric}+[_]
+          
+{String Chars} = {Printable} + {HT} - ["\]
+!-----------------Terminals--------------
+Identifier = {Id Head}{Id Tail}*
+           
+String = '"' ({String Chars} | '\' {Printable})* '"' 
+       
+Boolean = (true|false)
+                
+Digit = ('-'|'+')? {digit}+ ('.'{digit}+)?
+      
+BitwiseOperator = ('||'|'&&')
+      
+!-----------------Rules------------------
+<program> ::=   Start <stmt_list> End
+
+<stmt_list> ::= <concept><stmt_list>
+             |<concept>
+            
+<concept> ::= <variable_declaration>
+           |<if_stmt>
+           |<switch_stmt>
+           |<for_stmt>
+           |<while_stmt>
+           |<do_while>
+
+           
+          
+<variable_declaration> ::= <id> '=' <expr> 
+                        |<id> '=' String 
+                        |<id> '=' <condition>                          
+                        |<id> '=' <list>
+                        |<id> '=' <ternary_operator>
+                        |<id> '=' <dict>
+        
+<id> ::= Identifier
+         
+<expr> ::= <expr> '+' <term>
+        |<expr> '-' <term>
+        |<term>
+        
+<term> ::= <term> '*' <factor>
+        |<term> '/' <factor>
+        |<term> '%' <factor>
+        |<term> '>>' <factor>
+        |<term> '<<' <factor>
+        |<factor>
+        
+<factor> ::= <factor> '**' <expo>
+          |<expo>
+          
+<expo> ::= '('<expo>')'
+        |<id>
+        |Digit
+        
+!-----------------If_Statement----------------
+<if_stmt> ::= if <condition> ':' <stmt_list> end
+           |if <condition> ':' <stmt_list> end <elif_stmt>
+           
+<elif_stmt> ::= else if  <condition> ':' <stmt_list> end <elif_stmt>
+             |<else_stmt>
+     
+<else_stmt> ::= else ':' <stmt_list> end  
+                
+<condition> ::= <Expression> BitwiseOperator <condition>
+             |<Expression>
+            
+<Expression> ::= <expr> <op> <expr>
+              |Boolean
+          
+<op> ::= '>'|'<'|'>='|'<='|'=='|'!='
+!--------------Switch_Statement----------------
+<switch_stmt> ::= switch  <expr> ':' <case_list> end
+               
+<case_list> ::= case <expr> ':' <stmt_list> break  <case_list>
+             |case <expr> ':' <stmt_list> break
+
+!----------For_Statement-----------
+<for_stmt> ::=  for <id> in range '(' Digit ')' ':' <stmt_list> end  
+                                 
+<step> ::= <id>'++'
+        |<id>'--'
+        |'--'<id>
+        |'++'<id>
+        |<id> '=' <expr>
+        
+!-----------While_Statement----------------
+<while_stmt> ::= while <condition> ':' <stmt_list> end
+              
+!-------------Do_While---------------------
+<do_while> ::= do ':' <stmt_list> end while <condition> 
+            
+!------------List-------------------------
+<list> ::= list '(' <inside_list> ')'
+        |'[' <inside_list> ']'
+        
+<inside_list> ::= Digit ',' <inside_list>
+               |String ',' <inside_list>
+               |Digit
+               |String    
+              
+!----------Ternary_Operator--------------
+<ternary_operator> ::= <expr> '?' Boolean ':' Boolean  
+                    
+!----------Dictonary--------------------
+<dict> ::= dict '(' <key> ':' <value> ',' <inside_dict> ')'
+        |'{' <inside_dict> '}'
+
+<key> ::= <id>
+       
+<value> ::= Digit
+         |String
+         |Boolean
+         |<list>
+         |<dict>
+                 
+<inside_dict> ::=  <key> ':' <value> ',' <inside_dict>
+               |<key> ':' <value>     
