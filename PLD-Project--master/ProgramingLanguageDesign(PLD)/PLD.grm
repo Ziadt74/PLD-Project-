@@ -1,6 +1,4 @@
 "Start Symbol" = <program>
-               
-"Author" = 'Ahmed Ayman Mohamed'
 
 !---------------Character_Set------------
 {Id Head} = {letter}+ [_]
